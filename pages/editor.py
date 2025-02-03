@@ -1,26 +1,27 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from components.inputs.TextInput import TextInput
 from components.inputs.TextArea import TextArea
-
+from functions.savefiles import save_inputs_to_json
 class Editor(tk.Frame): 
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
         self.config(bg="beige")
 
+        self.inputs = []  # Список всех полей ввода
+
         # Верхний контейнер для заголовка и кнопки "Главная"
         header_frame = tk.Frame(self, bg="beige")
         header_frame.pack(fill="x", padx=20, pady=10)
 
-        # Кнопка "Главная"
         button = ttk.Button(
             header_frame, text="Главная",
             command=lambda: controller.show_frame("MainPage")
         )
         button.pack(side="left")
 
-        # Заголовок "Редактор"
         label = tk.Label(header_frame, text="Редактор", font=("Arial", 24), bg="beige")
         label.pack(side="left", padx=10)
 
@@ -28,23 +29,28 @@ class Editor(tk.Frame):
         scroll_frame = tk.Frame(self, bg="beige")
         scroll_frame.pack(fill="both", expand=True, padx=20, pady=10)
 
-        canvas = tk.Canvas(scroll_frame, bg="beige")
-        scrollbar = ttk.Scrollbar(scroll_frame, orient="vertical", command=canvas.yview)
-        self.input_container = tk.Frame(canvas, bg="beige")
+        self.canvas = tk.Canvas(scroll_frame, bg="beige")
+        scrollbar = ttk.Scrollbar(scroll_frame, orient="vertical", command=self.canvas.yview)
+        self.input_container = tk.Frame(self.canvas, bg="beige")
 
-        # Привязываем прокрутку к canvas
-        self.input_container.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        self.input_container.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
 
-        window_frame = canvas.create_window((0, 0), window=self.input_container, anchor="nw")
+        self.window_frame = self.canvas.create_window((0, 0), window=self.input_container, anchor="nw")
 
-        # Настройки canvas и scrollbar
-        canvas.configure(yscrollcommand=scrollbar.set)
-        canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+        self.canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
         # Кнопка "Добавить поле"
         add_button = ttk.Button(self, text="Добавить поле", command=self.show_add_menu)
         add_button.pack(pady=10)
+
+        # Кнопка "Сохранить"
+        save_button = ttk.Button(self, text="Сохранить", command=lambda: save_inputs_to_json(self.inputs))
+        save_button.pack(pady=10)
+
+        # Гарантируем, что папка 'data/' существует
+        os.makedirs("data", exist_ok=True)
 
     def show_add_menu(self):
         """Создаёт окно выбора типа ввода."""
@@ -67,9 +73,11 @@ class Editor(tk.Frame):
             input_component = TextInput(self.input_container, "Заголовок:", bg="beige")
         else:
             input_component = TextArea(self.input_container, "Текст:", bg="beige")
-        
-        input_component.pack(pady=10, fill="x")
 
-        # Обновляем область прокрутки
+        input_component.pack(pady=10, fill="x")
+        self.inputs.append(input_component)  # Сохраняем ссылку на поле
+
         self.input_container.update_idletasks()
         self.menu.destroy()
+
+   
