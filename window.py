@@ -3,11 +3,11 @@ from tkinter import ttk
 
 from pages.main import MainPage
 from pages.editor import Editor
-#1
+
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Приложение с несколькими страницами")
+        self.title("dqed")
         self.geometry("800x600")
         self.resizable(True, True)
 
