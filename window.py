@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from pages.main import MainPage
 from pages.editor import Editor
-
+#1
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
