@@ -5,11 +5,11 @@ class TextInput(tk.Frame):
         super().__init__(parent, *args, **kwargs)
         
         # Заголовок для ввода текста
-        self.label = tk.Label(self, text=label, font=("Arial", 14))
+        self.label = tk.Label(self, text=label, font=("Arial", 14),bg="beige")
         self.label.pack(pady=5)
 
         # Поле для ввода текста
-        self.text_entry = tk.Entry(self, font=("Arial", 14), width=30)
+        self.text_entry = tk.Entry(self, font=("Arial", 14), width=30, highlightthickness=0)
         self.text_entry.pack(padx=10, pady=10)
 
     def get_text(self):

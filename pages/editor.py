@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from components.inputs.TextInput import TextInput 
-
+from components.inputs.TextArea import TextArea 
 class Editor(tk.Frame): 
     def __init__(self, parent, controller):
         """
@@ -24,11 +24,14 @@ class Editor(tk.Frame):
         label = tk.Label(self, text="Редактор", font=("Arial", 24), bg="beige") 
         label.pack(pady=20, padx=20, side="top") 
         
-        text_input_component = TextInput(self, "Заголовок:")
+        title_input_component = TextInput(self, "Заголовок:",bg="beige")
+        title_input_component.pack(pady=20)
+        
+        text_input_component = TextArea(self, "Текст:",bg="beige")
         text_input_component.pack(pady=20)
 
-        print(text_input_component.get_text())  # Вывод текста, введённого в поле
-        text_input_component.set_text("") 
+        print(title_input_component.get_text())  # Вывод текста, введённого в поле
+        title_input_component.set_text("") 
 
   
       
