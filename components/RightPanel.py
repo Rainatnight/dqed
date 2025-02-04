@@ -1,17 +1,19 @@
 import tkinter as tk
-from tkinter import ttk
 
 class RightPanel(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent):
         super().__init__(parent, bg="lightgreen")
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        
-        top_frame = tk.Frame(self, bg="lightgreen")
-        top_frame.pack(side="top", fill="x", pady=10)
-        
-        right_label = tk.Label(top_frame, text="Текст", font=("Arial", 14), bg="lightgreen")
-        right_label.pack(side="left", padx=10)
-        
-        button = ttk.Button(top_frame, text="Редактор", command=lambda: controller.show_frame("Editor"))
-        button.pack(side="right", padx=10)
+
+        # Верхний фрейм
+        self.top_frame = tk.Frame(self, bg="lightgreen")
+        self.top_frame.pack(side="top", fill="x", pady=10)
+
+        # Метка для отображения выбранного файла
+        self.selected_file_label = tk.Label(self.top_frame, text="Выберите файл", font=("Arial", 14), bg="lightgreen")
+        self.selected_file_label.pack(side="left", padx=10)
+
+    def display_selected_file(self, filename):
+        """Обновляет текст в правом блоке при выборе файла."""
+        self.selected_file_label.config(text=f"Выбран: {filename}")
