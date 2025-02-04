@@ -41,11 +41,11 @@ class Editor(tk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        # Кнопка "Добавить поле"
+        
         add_button = ttk.Button(self, text="Добавить поле", command=self.show_add_menu)
         add_button.pack(pady=10)
 
-        # Кнопка "Сохранить"
+      
         save_button = ttk.Button(self, text="Сохранить", command=lambda: save_inputs_to_json(self.inputs))
         save_button.pack(pady=10)
 
