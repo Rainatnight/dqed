@@ -8,7 +8,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("dqed")
-        self.geometry("800x600")
+        self.geometry("1200x800")
         self.resizable(True, True)
 
         # Контейнер для всех страниц (фреймов)

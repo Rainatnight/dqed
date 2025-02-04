@@ -37,36 +37,32 @@ class RightPanel(tk.Frame):
                 # Открываем и парсим JSON
                 with open(file_path, "r", encoding="utf-8") as file:
                     data = json.load(file)
-                
-                # Отображаем заголовок в центре сверху
-                title_label = tk.Label(self.content_frame, text=data.get("title", "Без названия"), 
-                                       font=("Arial", 16, "bold"), bg="lightgreen", anchor="center")
-                title_label.pack(pady=10, anchor="center")
 
-                # Отображаем содержимое textarea
-                if "textarea" in data:
-                    textarea_label = tk.Label(self.content_frame, text=data["textarea"], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
-                    textarea_label.pack(pady=5, anchor="w")
+                # Пройдемся по ключам в том порядке, как они идут в JSON
+                for key in data:
+                    if key.startswith("title"):
+                        title_label = tk.Label(self.content_frame, text=data[key], 
+                                               font=("Arial", 16, "bold"), bg="lightgreen", anchor="center")
+                        title_label.pack(pady=10, anchor="center")
+                    elif key.startswith("textarea"):
+                        textarea_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
+                        textarea_label.pack(pady=5, anchor="w")
+                    elif key.startswith("text"):
+                        text_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
+                        text_label.pack(pady=5, anchor="w")
+                    elif key.startswith("image"):
+                        img_path = data[key]
+                        if os.path.exists(img_path):
+                            # Загружаем изображение с помощью PIL
+                            img = Image.open(img_path)
+                            img = img.resize((700, 400), Image.Resampling.LANCZOS)
 
-                # Отображаем содержимое text
-                if "text" in data:
-                    text_label = tk.Label(self.content_frame, text=data["text"], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
-                    text_label.pack(pady=5, anchor="w")
+                            img_tk = ImageTk.PhotoImage(img)
 
-                # Отображаем изображение, если оно есть
-                if "image" in data:
-                    img_path = data["image"]
-                    if os.path.exists(img_path):
-                        # Загружаем изображение с помощью PIL
-                        img = Image.open(img_path)
-                        img = img.resize((200, 200), Image.Resampling.LANCZOS)
-
-                        img_tk = ImageTk.PhotoImage(img)
-
-                        # Создаем метку для отображения изображения
-                        image_label = tk.Label(self.content_frame, image=img_tk, bg="lightgreen")
-                        image_label.image = img_tk  # Сохраняем ссылку на изображение
-                        image_label.pack(pady=10)
+                            # Создаем метку для отображения изображения
+                            image_label = tk.Label(self.content_frame, image=img_tk, bg="lightgreen")
+                            image_label.image = img_tk  # Сохраняем ссылку на изображение
+                            image_label.pack()
 
             except json.JSONDecodeError:
                 error_label = tk.Label(self.content_frame, text="Ошибка при разборе JSON.", font=("Arial", 12), bg="lightgreen", fg="red")
