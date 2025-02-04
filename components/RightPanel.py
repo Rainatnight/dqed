@@ -18,9 +18,33 @@ class RightPanel(tk.Frame):
         self.top_frame = tk.Frame(self, bg="lightgreen")
         self.top_frame.pack(side="top", fill="x", pady=10)
 
-        # Фрейм для отображения содержимого JSON
-        self.content_frame = tk.Frame(self, bg="lightgreen")
-        self.content_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        # Добавляем Canvas для прокрутки
+        self.canvas = tk.Canvas(self, bg="lightgreen")
+        self.canvas.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+
+        # Добавляем Scrollbar
+        self.scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.scrollbar.pack(side="right", fill="y")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        # Создаем фрейм внутри канваса для отображения содержимого
+        self.content_frame = tk.Frame(self.canvas, bg="lightgreen")
+        self.canvas.create_window((0, 0), window=self.content_frame, anchor="nw")
+
+        # Обновляем размеры канваса, когда контент меняется
+        self.content_frame.bind("<Configure>", self.on_frame_configure)
+
+        # Привязываем событие прокрутки колесика мыши
+        self.canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
+
+    def on_frame_configure(self, event):
+        """Обновляет прокрутку, чтобы фрейм правильно отображался в канвасе"""
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def on_mouse_wheel(self, event):
+        """Обрабатывает прокрутку колесика мыши для канваса"""
+        # Прокручиваем канвас на 3 пикселя в зависимости от направления колесика
+        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
     def display_selected_file(self, filename):
         """Обновляет текст в правом блоке при выборе файла и отображает его содержимое."""
@@ -42,8 +66,8 @@ class RightPanel(tk.Frame):
                 for key in data:
                     if key.startswith("title"):
                         title_label = tk.Label(self.content_frame, text=data[key], 
-                                               font=("Arial", 16, "bold"), bg="lightgreen", anchor="center")
-                        title_label.pack(pady=10, anchor="center")
+                                               font=("Arial", 16, "bold"), bg="lightgreen", anchor="w")
+                        title_label.pack(pady=10, anchor="w")
                     elif key.startswith("textarea"):
                         textarea_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
                         textarea_label.pack(pady=5, anchor="w")
