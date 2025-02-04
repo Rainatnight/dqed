@@ -2,16 +2,17 @@ import tkinter as tk
 import json
 import os
 from tkinter import ttk
+from PIL import Image, ImageTk  # Import PIL for image handling
+
 class RightPanel(tk.Frame):
-    def __init__(self, parent,controller):
+    def __init__(self, parent, controller):
         super().__init__(parent, bg="lightgreen")
         self.controller = controller
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
-
         add_button = ttk.Button(self, text="Редактор", command=lambda: controller.show_frame("Editor"))
-        add_button.pack(side="top",pady=10)
+        add_button.pack(side="top", pady=10)
         
         # Верхний фрейм
         self.top_frame = tk.Frame(self, bg="lightgreen")
@@ -23,8 +24,6 @@ class RightPanel(tk.Frame):
 
     def display_selected_file(self, filename):
         """Обновляет текст в правом блоке при выборе файла и отображает его содержимое."""
-     
-        
         # Очищаем содержимое фрейма, если оно было
         for widget in self.content_frame.winfo_children():
             widget.destroy()
@@ -53,6 +52,21 @@ class RightPanel(tk.Frame):
                 if "text" in data:
                     text_label = tk.Label(self.content_frame, text=data["text"], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
                     text_label.pack(pady=5, anchor="w")
+
+                # Отображаем изображение, если оно есть
+                if "image" in data:
+                    img_path = data["image"]
+                    if os.path.exists(img_path):
+                        # Загружаем изображение с помощью PIL
+                        img = Image.open(img_path)
+                        img = img.resize((200, 200), Image.Resampling.LANCZOS)
+
+                        img_tk = ImageTk.PhotoImage(img)
+
+                        # Создаем метку для отображения изображения
+                        image_label = tk.Label(self.content_frame, image=img_tk, bg="lightgreen")
+                        image_label.image = img_tk  # Сохраняем ссылку на изображение
+                        image_label.pack(pady=10)
 
             except json.JSONDecodeError:
                 error_label = tk.Label(self.content_frame, text="Ошибка при разборе JSON.", font=("Arial", 12), bg="lightgreen", fg="red")
