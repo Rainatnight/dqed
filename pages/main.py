@@ -13,7 +13,7 @@ class MainPage(tk.Frame):
         self.columnconfigure(1, weight=4)
         self.rowconfigure(0, weight=1)
         
-        self.right_panel = RightPanel(self)
+        self.right_panel = RightPanel(self,controller)
         self.right_panel.grid(row=0, column=1, sticky="nsew")
 
         self.left_panel = LeftPanel(self, self.right_panel)
