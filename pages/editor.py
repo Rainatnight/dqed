@@ -47,11 +47,17 @@ class Editor(tk.Frame):
         add_button = ttk.Button(self, text="Добавить поле", command=self.show_add_menu)
         add_button.pack(pady=10)
 
-        save_button = ttk.Button(self, text="Сохранить", command=lambda: save_inputs_to_json(self.inputs))
+        save_button = ttk.Button(self, text="Сохранить", command=lambda: self.save_and_go_to_main())
         save_button.pack(pady=10)
 
         # Create 'data/' folder if it doesn't exist
         os.makedirs("data", exist_ok=True)
+        
+
+    def save_and_go_to_main(self):
+        """Saves inputs and switches to the MainPage."""
+        save_inputs_to_json(self.inputs)  # Save the inputs to a JSON file
+        self.controller.show_frame("MainPage")  # Switch to the MainPage frame
 
     def show_add_menu(self):
         """Creates the input type selection menu."""

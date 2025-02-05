@@ -2,7 +2,7 @@ import tkinter as tk
 import json
 import os
 from tkinter import ttk
-from PIL import Image, ImageTk  # Import PIL for image handling
+from PIL import Image, ImageTk  
 
 class RightPanel(tk.Frame):
     def __init__(self, parent, controller):
