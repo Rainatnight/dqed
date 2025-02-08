@@ -5,7 +5,8 @@ from tkinter import ttk
 from PIL import Image, ImageTk  
 import tkinter.messagebox as messagebox
 
-bgcolor = '#A6A6A6'
+from styles.vars import bgcolorSecondary as bgcolor
+
 class RightPanel(tk.Frame):
     def __init__(self, parent, controller,left_panel):
         super().__init__(parent, bg=bgcolor)

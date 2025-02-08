@@ -1,9 +1,9 @@
 import tkinter as tk
 import os
+from styles.vars import bgcolorSecondary,bgcolor
 
-bgcolor = '#2D2D2D'
 fgcolor = 'white'
-secondaryGrey ='#A6A6A6'
+
 class LeftPanel(tk.Frame):
     def __init__(self, parent, right_panel, data_directory="data"):
         super().__init__(parent, bg=bgcolor)
@@ -42,7 +42,7 @@ class LeftPanel(tk.Frame):
             tk.Label(self.file_list_frame, text="Нет файлов", font=("Arial", 12), bg=bgcolor).pack(pady=5)
         else:
             for file in files:
-                bg_color = bgcolor if file != self.selected_file else secondaryGrey  # Цвет для выбранного файла
+                bg_color = bgcolor if file != self.selected_file else bgcolorSecondary  # Цвет для выбранного файла
                 file_label = tk.Button(
                     self.file_list_frame, text=file, font=("Arial", 14),
                     bg=bg_color, fg=fgcolor,relief="flat", command=lambda f=file: self.on_file_click(f)
