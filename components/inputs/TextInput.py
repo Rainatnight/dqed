@@ -5,7 +5,7 @@ class TextInput(tk.Frame):
         super().__init__(parent, *args, **kwargs)
         
         # Заголовок для ввода текста
-        self.label = tk.Label(self, text=label, font=("Arial", 14),bg="beige")
+        self.label = tk.Label(self, text=label, font=("Arial", 14),bg=self["bg"])
         self.label.pack(pady=5)
 
         # Поле для ввода текста
