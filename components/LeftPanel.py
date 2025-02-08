@@ -1,9 +1,12 @@
 import tkinter as tk
 import os
 
+bgcolor = '#2D2D2D'
+fgcolor = 'white'
+secondaryGrey ='#A6A6A6'
 class LeftPanel(tk.Frame):
     def __init__(self, parent, right_panel, data_directory="data"):
-        super().__init__(parent, bg="lightblue")
+        super().__init__(parent, bg=bgcolor)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         
@@ -12,11 +15,11 @@ class LeftPanel(tk.Frame):
         self.selected_file = None  # Храним выбранный файл
 
         # Заголовок
-        self.left_label = tk.Label(self, text="Содержание", font=("Arial", 14), bg="lightblue")
+        self.left_label = tk.Label(self, text="Содержание", font=("Arial", 20,'bold'), bg=bgcolor,fg=fgcolor)
         self.left_label.pack(anchor="n", padx=10, pady=10)
 
         # Фрейм для списка файлов
-        self.file_list_frame = tk.Frame(self, bg="lightblue")
+        self.file_list_frame = tk.Frame(self, bg=bgcolor)
         self.file_list_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
         # Кнопка обновления
@@ -36,13 +39,13 @@ class LeftPanel(tk.Frame):
         files = [f[:-5] for f in os.listdir(self.data_directory) if f.endswith(".json")]
 
         if not files:
-            tk.Label(self.file_list_frame, text="Нет файлов", font=("Arial", 12), bg="lightblue").pack(pady=5)
+            tk.Label(self.file_list_frame, text="Нет файлов", font=("Arial", 12), bg=bgcolor).pack(pady=5)
         else:
             for file in files:
-                bg_color = "lightblue" if file != self.selected_file else "lightgreen"  # Цвет для выбранного файла
+                bg_color = bgcolor if file != self.selected_file else secondaryGrey  # Цвет для выбранного файла
                 file_label = tk.Button(
-                    self.file_list_frame, text=file, font=("Arial", 12),
-                    bg=bg_color, relief="flat", command=lambda f=file: self.on_file_click(f)
+                    self.file_list_frame, text=file, font=("Arial", 14),
+                    bg=bg_color, fg=fgcolor,relief="flat", command=lambda f=file: self.on_file_click(f)
                 )
                 file_label.pack(anchor="w", pady=2, fill="x")
 

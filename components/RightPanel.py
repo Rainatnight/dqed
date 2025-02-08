@@ -4,9 +4,10 @@ import os
 from tkinter import ttk
 from PIL import Image, ImageTk  
 
+bgcolor = '#A6A6A6'
 class RightPanel(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, bg="lightgreen")
+        super().__init__(parent, bg=bgcolor)
         self.controller = controller
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -15,11 +16,11 @@ class RightPanel(tk.Frame):
         add_button.pack(side="top", pady=10)
         
         # Верхний фрейм
-        self.top_frame = tk.Frame(self, bg="lightgreen")
+        self.top_frame = tk.Frame(self, bg=bgcolor)
         self.top_frame.pack(side="top", fill="x", pady=10)
 
         # Добавляем Canvas для прокрутки
-        self.canvas = tk.Canvas(self, bg="lightgreen")
+        self.canvas = tk.Canvas(self, bg=bgcolor)
         self.canvas.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
         # Добавляем Scrollbar
@@ -28,7 +29,7 @@ class RightPanel(tk.Frame):
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
         # Создаем фрейм внутри канваса для отображения содержимого
-        self.content_frame = tk.Frame(self.canvas, bg="lightgreen")
+        self.content_frame = tk.Frame(self.canvas, bg=bgcolor)
         self.canvas.create_window((0, 0), window=self.content_frame, anchor="nw")
 
         # Обновляем размеры канваса, когда контент меняется
@@ -66,13 +67,13 @@ class RightPanel(tk.Frame):
                 for key in data:
                     if key.startswith("title"):
                         title_label = tk.Label(self.content_frame, text=data[key], 
-                                               font=("Arial", 16, "bold"), bg="lightgreen", anchor="w")
+                                               font=("Arial", 16, "bold"), bg=bgcolor, anchor="w")
                         title_label.pack(pady=10, anchor="w")
                     elif key.startswith("textarea"):
-                        textarea_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
+                        textarea_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg=bgcolor, anchor="w", justify="left")
                         textarea_label.pack(pady=5, anchor="w")
                     elif key.startswith("text"):
-                        text_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg="lightgreen", anchor="w", justify="left")
+                        text_label = tk.Label(self.content_frame, text=data[key], font=("Arial", 12), bg=bgcolor, anchor="w", justify="left")
                         text_label.pack(pady=5, anchor="w")
                     elif key.startswith("image"):
                         img_path = data[key]
@@ -84,13 +85,13 @@ class RightPanel(tk.Frame):
                             img_tk = ImageTk.PhotoImage(img)
 
                             # Создаем метку для отображения изображения
-                            image_label = tk.Label(self.content_frame, image=img_tk, bg="lightgreen")
+                            image_label = tk.Label(self.content_frame, image=img_tk, bg=bgcolor)
                             image_label.image = img_tk  # Сохраняем ссылку на изображение
                             image_label.pack()
 
             except json.JSONDecodeError:
-                error_label = tk.Label(self.content_frame, text="Ошибка при разборе JSON.", font=("Arial", 12), bg="lightgreen", fg="red")
+                error_label = tk.Label(self.content_frame, text="Ошибка при разборе JSON.", font=("Arial", 12), bg=bgcolor, fg="red")
                 error_label.pack(pady=5)
         else:
-            error_label = tk.Label(self.content_frame, text="Файл не найден.", font=("Arial", 12), bg="lightgreen", fg="red")
+            error_label = tk.Label(self.content_frame, text="Файл не найден.", font=("Arial", 12), bg=bgcolor, fg="red")
             error_label.pack(pady=5)
