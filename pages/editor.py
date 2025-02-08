@@ -54,11 +54,17 @@ class Editor(tk.Frame):
         # Create 'data/' folder if it doesn't exist
         os.makedirs("data", exist_ok=True)
         
+    def clear_inputs(self):
+        """Удаляет все виджеты из контейнера ввода и очищает список inputs."""
+        for widget in self.input_container.winfo_children():
+            widget.destroy()
+        self.inputs.clear()     
 
     def save_and_go_to_main(self):
-        """Saves inputs and switches to the MainPage."""
-        save_inputs_to_json(self.inputs)  # Save the inputs to a JSON file
-        self.controller.show_frame("MainPage")  # Switch to the MainPage frame
+        """Saves inputs, clears the frame, and switches to the MainPage."""
+        save_inputs_to_json(self.inputs)  # Сохранение данных в JSON
+        self.clear_inputs()  # Очистка фрейма
+        self.controller.show_frame("MainPage") 
 
     def show_add_menu(self):
         """Creates the input type selection menu."""
