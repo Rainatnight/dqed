@@ -6,14 +6,26 @@ from PIL import Image, ImageTk
 
 bgcolor = '#A6A6A6'
 class RightPanel(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller,left_panel):
         super().__init__(parent, bg=bgcolor)
+        
         self.controller = controller
+       
+        self.left_panel = left_panel
+        
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
+        self.current_filename = None
 
-        add_button = ttk.Button(self, text="Редактор", command=lambda: controller.show_frame("Editor"))
-        add_button.pack(side="top", pady=10)
+        button_frame = tk.Frame(self, bg=bgcolor)
+        button_frame.pack(side="top", pady=10)
+        
+        add_button = ttk.Button(button_frame, text="Редактор", command=lambda: controller.show_frame("Editor"))
+        add_button.pack(side="left", padx=5)
+        
+        self.delete_button = ttk.Button(button_frame, text="Удалить", command=self.delete_file)
+        self.delete_button.pack(side="left", padx=5)
+        self.delete_button.pack_forget()  # Изначально скрываем кнопку
         
         # Верхний фрейм
         self.top_frame = tk.Frame(self, bg=bgcolor)
@@ -44,17 +56,19 @@ class RightPanel(tk.Frame):
 
     def on_mouse_wheel(self, event):
         """Обрабатывает прокрутку колесика мыши для канваса"""
-        # Прокручиваем канвас на 3 пикселя в зависимости от направления колесика
         self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
     def display_selected_file(self, filename):
         """Обновляет текст в правом блоке при выборе файла и отображает его содержимое."""
+        self.current_filename = filename
+        
         # Очищаем содержимое фрейма, если оно было
         for widget in self.content_frame.winfo_children():
             widget.destroy()
 
         # Путь к файлу
         file_path = os.path.join("data", f"{filename}.json")
+        self.toggle_delete_button(True if os.path.exists(file_path) else False)
 
         # Проверяем, существует ли файл
         if os.path.exists(file_path):
@@ -95,3 +109,23 @@ class RightPanel(tk.Frame):
         else:
             error_label = tk.Label(self.content_frame, text="Файл не найден.", font=("Arial", 12), bg=bgcolor, fg="red")
             error_label.pack(pady=5)
+
+    def toggle_delete_button(self, show):
+        """Показывает или скрывает кнопку удаления"""
+        if show:
+            self.delete_button.pack(side="left", padx=5)
+        else:
+            self.delete_button.pack_forget()
+
+    def delete_file(self):
+        """Функция удаления файла"""
+        if self.current_filename:
+            file_path = os.path.join("data", f"{self.current_filename}.json")
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                self.toggle_delete_button(False)
+                for widget in self.content_frame.winfo_children():
+                    widget.destroy()
+                error_label = tk.Label(self.content_frame, text="Файл удален.", font=("Arial", 12), bg=bgcolor, fg="red")
+                error_label.pack(pady=5)
+                self.left_panel.refresh()

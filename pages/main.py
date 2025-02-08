@@ -12,9 +12,14 @@ class MainPage(tk.Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=4)
         self.rowconfigure(0, weight=1)
-        
-        self.right_panel = RightPanel(self,controller)
+
+        # Создаем left_panel сначала
+        self.left_panel = LeftPanel(self, None)  # Временно передаем None
+
+        # Создаем right_panel и передаем ссылку на left_panel
+        self.right_panel = RightPanel(self, controller, self.left_panel)
         self.right_panel.grid(row=0, column=1, sticky="nsew")
 
-        self.left_panel = LeftPanel(self, self.right_panel)
+        # Теперь обновляем ссылку в left_panel
+        self.left_panel.right_panel = self.right_panel
         self.left_panel.grid(row=0, column=0, sticky="nsew")
