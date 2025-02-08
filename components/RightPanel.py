@@ -3,6 +3,7 @@ import json
 import os
 from tkinter import ttk
 from PIL import Image, ImageTk  
+import tkinter.messagebox as messagebox
 
 bgcolor = '#A6A6A6'
 class RightPanel(tk.Frame):
@@ -118,14 +119,20 @@ class RightPanel(tk.Frame):
             self.delete_button.pack_forget()
 
     def delete_file(self):
-        """Функция удаления файла"""
+        """Функция удаления файла с подтверждением"""
         if self.current_filename:
             file_path = os.path.join("data", f"{self.current_filename}.json")
             if os.path.exists(file_path):
-                os.remove(file_path)
-                self.toggle_delete_button(False)
-                for widget in self.content_frame.winfo_children():
-                    widget.destroy()
-                error_label = tk.Label(self.content_frame, text="Файл удален.", font=("Arial", 12), bg=bgcolor, fg="red")
-                error_label.pack(pady=5)
-                self.left_panel.refresh()
+                # Появляется окно подтверждения удаления
+                result = messagebox.askyesno("Подтверждение удаления", "Вы уверены, что хотите удалить этот файл?")
+                if result:  # Если пользователь подтвердил удаление
+                    os.remove(file_path)
+                    self.toggle_delete_button(False)
+                    for widget in self.content_frame.winfo_children():
+                        widget.destroy()
+                    error_label = tk.Label(self.content_frame, text="Файл удален.", font=("Arial", 12), bg=bgcolor, fg="red")
+                    error_label.pack(pady=5)
+                    self.left_panel.refresh()
+                else:
+                    error_label = tk.Label(self.content_frame, text="Удаление отменено.", font=("Arial", 12), bg=bgcolor, fg="green")
+                    error_label.pack(pady=5)
